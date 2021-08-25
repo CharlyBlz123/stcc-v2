@@ -20,7 +20,8 @@ app.use(express.json());
 
 //session
 
-app.use("/auth", require("./routes/session"));
+app.use("/auth", require("./routes/sessionRouter"));
+app.use("/users", require("./routes/userRouter"));
 
 
 app.listen(PORT, ()=>{
