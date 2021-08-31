@@ -1,24 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState } from "react";
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-function App() {
+import Dashboard from "./components/dashboard/Dashboard";
+import SignIn from "./components/session/SignIn";
+import SignUp from "./components/session/SignUp";
+
+const App = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const setAuth = boolean => {
+    setIsAuthenticated(boolean);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Router>
+        <div className="container">
+          <Switch>
+            <Route
+              exact 
+              path="/login" 
+              render={props => 
+                !isAuthenticated ? (
+                  <SignIn {...props} setAuth={setAuth} />
+                ) : (
+                  <Redirect to="/information" />
+                )
+              } 
+            />
+            <Route
+              exact 
+              path="/register" 
+              render={props => 
+                !isAuthenticated ? (
+                  <SignUp {...props} setAuth={setAuth} />
+                ) : (
+                  <Redirect to="/information" />
+                )
+              } 
+            />
+            <Route
+              exact 
+              path="/information" 
+              render={props => 
+                isAuthenticated ? (
+                  <Dashboard {...props} setAuth={setAuth} />
+                ) : (
+                  <Redirect to="/login" />
+                )
+              } 
+            />
+          </Switch>
+        </div>
+      </Router>
+    </Fragment>
   );
 }
 
