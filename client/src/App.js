@@ -5,6 +5,8 @@ import Dashboard from "./components/dashboard/Dashboard";
 import SignIn from "./components/session/SignIn";
 import SignUp from "./components/session/SignUp";
 
+import './assets/styles/app.css'
+
 const App = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,7 +26,7 @@ const App = () => {
                 !isAuthenticated ? (
                   <SignIn {...props} setAuth={setAuth} />
                 ) : (
-                  <Redirect to="/information" />
+                  <Redirect to="/" />
                 )
               } 
             />
@@ -35,13 +37,13 @@ const App = () => {
                 !isAuthenticated ? (
                   <SignUp {...props} setAuth={setAuth} />
                 ) : (
-                  <Redirect to="/information" />
+                  <Redirect to="/" />
                 )
               } 
             />
             <Route
               exact 
-              path="/information" 
+              path="/" 
               render={props => 
                 isAuthenticated ? (
                   <Dashboard {...props} setAuth={setAuth} />
