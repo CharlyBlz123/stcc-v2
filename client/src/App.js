@@ -1,18 +1,43 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import Dashboard from "./components/dashboard/Dashboard";
 import SignIn from "./components/session/SignIn";
 import SignUp from "./components/session/SignUp";
 
-import './assets/styles/app.css'
+import path from "./domain";
+
+import './assets/styles/app.css';
+
+//https://www.coeplimcolima.com/
+//http://tracelemon.net/public/
 
 const App = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const setAuth = boolean => {
     setIsAuthenticated(boolean);
   };
+
+  const isAuth = async () => {
+    try {
+      const response = await fetch(`${path}auth/is-verify`, {
+        method: "GET",
+        headers: {token: localStorage.token}
+      });
+
+      const parseRes = await response.json();
+      parseRes === true ? setAuth(true): setAuth(false);
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    isAuth()
+  });
 
   return (
     <Fragment>

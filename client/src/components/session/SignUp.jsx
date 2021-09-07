@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBIcon, MDBModalFooter } from 'mdbreact';
 import Domain from '../../domain';
 
 import '../../assets/styles/sign-up.css'
