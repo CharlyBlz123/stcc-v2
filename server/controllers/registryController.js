@@ -10,18 +10,9 @@ socket.io.on("connection", (socket) => {
 exports.getAll = async (req, res) => {
     try {
         const registries = await db.registry.findAll({
-            attributes: [
-                'id',
-                'date',
-                'time',
-                'temperature',
-                'pression',
-                'humidity',
-                'wind',
-                'wind_max',
-                'radiation',
-                'precipitation'
-            ]
+            limit: 10,
+            order: [ ['createdAt', 'DESC' ]],
+            
         });
         res.status(200).json(registries);
     } catch (error) {
@@ -34,18 +25,6 @@ exports.getAll = async (req, res) => {
 exports.getByRange = async (req, res) => {
     try {
         const registries = await db.registry.findAll({
-            attributes: [
-                'id',
-                'date',
-                'time',
-                'temperature',
-                'pression',
-                'humidity',
-                'wind',
-                'wind_max',
-                'radiation',
-                'precipitation'
-            ]
         });
         res.status(200).json(registries);
     } catch (error) {

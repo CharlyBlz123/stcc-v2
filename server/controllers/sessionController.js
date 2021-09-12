@@ -31,8 +31,6 @@ exports.create = async (req, res) => {
             }
         );
 
-        console.log(newUser.dataValues.password)
-
         const token = jwtGenerator(newUser.dataValues.id)
         res.status(200).json({ token })
 
@@ -58,7 +56,6 @@ exports.new = async (req, res) => {
 
         if(user.length === 0) return res.status(401).json("Password or Email is incorrect");
 
-        console.log(user)
         const validPassword = await checkPassword(password,  user[0].dataValues.password);
         if(!validPassword) return res.status(401).json("Password or Email is incorrect");
 

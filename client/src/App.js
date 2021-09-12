@@ -28,7 +28,11 @@ const App = () => {
       });
 
       const parseRes = await response.json();
-      parseRes === true ? setAuth(true): setAuth(false);
+     if( parseRes === true) setAuth(true);
+     else{
+      localStorage.removeItem("token");
+      setAuth(false)
+     }
 
     } catch (error) {
       console.error(error.message);
@@ -40,9 +44,8 @@ const App = () => {
   });
 
   return (
-    <Fragment>
+    <div>
       <Router>
-        <div className="container">
           <Switch>
             <Route
               exact 
@@ -78,9 +81,8 @@ const App = () => {
               } 
             />
           </Switch>
-        </div>
       </Router>
-    </Fragment>
+    </div>
   );
 }
 
