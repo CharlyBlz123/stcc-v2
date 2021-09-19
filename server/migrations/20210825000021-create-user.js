@@ -9,22 +9,37 @@ module.exports = {
         primaryKey: true
       },
       userName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+  
+      },
+      status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
+      userCode: {
+        type:  Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       email: {
-        type: Sequelize.STRING
+        type:  Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       password: {
-        type: Sequelize.STRING
-      },
-      rfc: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       curp: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
+        unique: false
       },
       createdAt: {
         allowNull: false,

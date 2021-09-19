@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Title from './Title';
+import Title from '../title/Title';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -17,15 +17,15 @@ const useStyles = makeStyles({
 const ValueIndicators = ({ registries, property }) => {
 
 
-
-  const [values, setValues] = useState({});
   const [indicators, setIndicators] = useState({
     maximun: "...",
     minimum: "..."
   });
 
+
+
   const getIndicators = async () => {
-    let maximumAuxiliar = 0;
+    let maximumAuxiliar = await registries[registries.length - 1][property];
     registries.forEach(element => {
       if (element[property] > maximumAuxiliar) maximumAuxiliar = element[property];
     });
@@ -41,8 +41,9 @@ const ValueIndicators = ({ registries, property }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    getIndicators();
+    if(registries.length != 0) getIndicators();
   }, [property, registries]);
+
   return (
     <Fragment>
       <Title>Indicadores</Title>

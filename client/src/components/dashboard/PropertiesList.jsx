@@ -4,12 +4,14 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
+import PeopleAlt from '@material-ui/icons/PeopleAlt';
 import OpacityIcon from '@material-ui/icons/Opacity';
 import WavesIcon from '@material-ui/icons/Waves';
 import ExploreIcon from '@material-ui/icons/Explore';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import List from '@material-ui/core/List';
+import { Link } from 'react-router-dom';
 
 export const PropertiesList = ({ setInformation }) => {
 
@@ -54,6 +56,15 @@ export const PropertiesList = ({ setInformation }) => {
           </ListItemIcon>
           <ListItemText primary="Precipitación" />
         </ListItem>
+        <ListSubheader inset>Indicadores</ListSubheader>
+        <Link to="/users" style={{ textDecoration: 'none', color: "inherit" }}>
+          <ListItem button>
+            <ListItemIcon>
+              <PeopleAlt />
+            </ListItemIcon>
+            <ListItemText primary="Panel de usuarios" />
+          </ListItem>
+        </Link>
       </div>
     </List>
   );

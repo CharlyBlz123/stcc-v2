@@ -1,13 +1,14 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import socket from '../../Socket';
+
+import React, { useState, useEffect } from 'react';
 import path from '../../domain';
 
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -15,15 +16,15 @@ import IconButton from '@material-ui/core/IconButton';
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import PropertiesList from './PropertiesList';
-import Chart from './Chart';
-import ValueIndicators from './ValueIndicators';
-import RegistriesTable from './RegistriesTable';
-import UserMenu from './UserMenu';
+
+import UsersList from './UsersList';
+import UserMenu from '../dashboard/UserMenu';
+import UserModal from './UserModal';
+import UsersTable from './UsersTable';
+
 
 import dashboardStyles from '../../assets/styles/dashboard-styles';
 
@@ -49,40 +50,12 @@ const Dashboard = ({ setAuth }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const [users, setUsers] = useState([]);
-  const [registries, setRegistries] = useState([]);
-
-  const [chartInformation, setChartInformation] = useState({
-    title: "Temperatura",
-    property: "temperature",
-    unitOfMeasurement: "Grados"
-  });
-
-  const [change, setChange] = useState(false);
   const [open, setOpen] = useState(false);
-
-
-  const getRegistries = async () => {
-    try {
-      const response = await fetch(`${path}registries/`, {
-        method: "GET",
-        headers: { token: localStorage.token }
-      });
-      const parseResponse = await response.json();
-      const sortResponse = parseResponse.reverse();
-      
-      setRegistries(sortResponse);
-    } catch (err) {
-      console.error(err.message)
-    }
-  };
-
-  const setInformation = (title, property, unitOfMeasurement) => {
-    const newChartInformation = {title: title, property: property, unitOfMeasurement: unitOfMeasurement }
-    setChartInformation({...newChartInformation});
-  }
+  const [modalShow, setModalShow] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const getUsers = async () => {
     try {
@@ -92,8 +65,8 @@ const Dashboard = ({ setAuth }) => {
       });
 
       const parseResponse = await response.json();
-
       setUsers(parseResponse);
+
     } catch (error) {
       console.error(error.message);
     }
@@ -105,17 +78,14 @@ const Dashboard = ({ setAuth }) => {
     setAuth(false);
   }
 
+  const setShowModal = () => {
+    setModalShow(!modalShow);
+  }
 
   useEffect(() => {
-    getRegistries();
-  }, [change]);
-
-  useEffect(() => {
-    socket.on('new: data', (c) => {
-      getRegistries();
-
-    });
-  }, []);
+    getUsers();
+    console.log(users);
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -150,28 +120,25 @@ const Dashboard = ({ setAuth }) => {
           </IconButton>
         </div>
         <Divider />
-        <PropertiesList setInformation={ setInformation } />
+
+        <UsersList showModal={ setShowModal} />
+
+
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={8} lg={12}>
               <Paper className={fixedHeightPaper}>
-                <Chart chartInformation= {chartInformation} registries={ registries } />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <ValueIndicators registries={ registries } property={ chartInformation.property } />
+               
               </Paper>
             </Grid>
             {/* Recent RegistriesTable */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <RegistriesTable registries={ registries }/>
+               <UsersTable users={ users } />
               </Paper>
             </Grid>
           </Grid>
@@ -180,6 +147,7 @@ const Dashboard = ({ setAuth }) => {
           </Box>
         </Container>
       </main>
+      <UserModal modalShow={modalShow} setModalShow={setShowModal} />
     </div>
   );
 }

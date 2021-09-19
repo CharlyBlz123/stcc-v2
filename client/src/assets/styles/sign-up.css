@@ -58,8 +58,7 @@
     font-weight: 300
 }
 
-input,
-textarea {
+.input-sign-in {
     padding: 10px 12px 10px 12px;
     border: 1px solid lightgrey;
     border-radius: 2px;
@@ -72,8 +71,7 @@ textarea {
     letter-spacing: 1px
 }
 
-input:focus,
-textarea:focus {
+.input-sign-in:focus {
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;

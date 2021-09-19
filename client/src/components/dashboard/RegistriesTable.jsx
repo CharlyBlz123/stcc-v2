@@ -14,7 +14,7 @@ import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import ExploreIcon from '@material-ui/icons/Explore';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 
-import Title from './Title';
+import Title from '../title/Title';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Registros recientes</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
       </Table>
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
+          Ver más registros
         </Link>
       </div>
     </React.Fragment>

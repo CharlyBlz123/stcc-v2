@@ -9,10 +9,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   user.init({
-    userName: DataTypes.UUIDV4,
+    userName: DataTypes.STRING,
+    userCode: DataTypes.STRING,
     email: DataTypes.STRING,
+    status: DataTypes.BOOLEAN,
     password: DataTypes.STRING,
-    rfc: DataTypes.STRING,
     curp: DataTypes.STRING,
     phone: DataTypes.STRING
   }, {

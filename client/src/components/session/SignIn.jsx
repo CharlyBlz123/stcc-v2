@@ -5,11 +5,11 @@ import coverImage from '../../assets/images/lemon-sign-in.png';
 const SignIn = ({ setAuth }) => {
 
     const [values, setValues] = useState({
-        email: "",
+        userCode: "",
         password: "",
     });
 
-    const { email, password } = values;
+    const { userCode, password } = values;
 
     const onChange = (event) => {
         setValues({ ...values, [event.target.name]: event.target.value });
@@ -18,7 +18,7 @@ const SignIn = ({ setAuth }) => {
     const onSubmitForm = async (event) => {
         event.preventDefault();
         try {
-            const body = { email, password }
+            const body = { userCode, password }
 
             const response = await fetch(`${Domain}auth/sign-in`, {
                 method: "POST",
@@ -48,13 +48,13 @@ const SignIn = ({ setAuth }) => {
                             <form onSubmit={onSubmitForm}>
                                 <div className="row px-3">
                                     <label className="mb-1">
-                                        <h6 className="mb-0 text-sm">Email</h6>
+                                        <h6 className="mb-0 text-sm">Número de cuenta</h6>
                                     </label>
                                     <input 
-                                        className="mb-4"
-                                        type="text" name="email"
-                                        placeholder="Ingresa una dirección de correo" 
-                                        value={email}
+                                        className="mb-4 input-sign-in"
+                                        type="text" name="userCode"
+                                        placeholder="Ingresa tu número de cuenta" 
+                                        value={userCode}
                                         onChange={event => onChange(event)}
                                     />
                                 </div>
@@ -63,6 +63,7 @@ const SignIn = ({ setAuth }) => {
                                         <h6 className="mb-0 text-sm">Contraseña</h6>
                                     </label>
                                     <input
+                                        className="mb-4 input-sign-in"
                                         type="password"
                                         name="password"
                                         placeholder="Ingresa tu contraseña"
@@ -78,17 +79,12 @@ const SignIn = ({ setAuth }) => {
                                     <button type="submit" className="btn btn-green text-center">Aceptar</button>
                                 </div>
                             </form>
-                            <div className="row mb-4 px-3"> 
-                                <small className="font-weight-bold">¿No tienes una cuenta? 
-                                    <a className="text-sign-up"> Regístrate</a>
-                                </small> 
-                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="bg-blue py-4">
                     <div className="row px-3">
-                        <small className="ml-4 ml-sm-5 mb-2">Copyright &copy; 2021. All rights reserved.</small>
+                        <small className="ml-4 ml-sm-5 mb-2">Copyright &copy; 2021. Todos los derechos reservados.</small>
                     </div>
                 </div>
             </div>
