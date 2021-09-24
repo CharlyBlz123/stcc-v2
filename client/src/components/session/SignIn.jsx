@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Domain from '../../domain';
 
 import coverImage from '../../assets/images/lemon-sign-in.png';
+import '../../assets/styles/sign-up.css';
+
 const SignIn = ({ setAuth }) => {
 
     const [values, setValues] = useState({
