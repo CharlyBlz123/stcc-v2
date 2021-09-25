@@ -1,8 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import RegistriesDashboard from "./components/dashboard/Dashboard";
-import UsersDasboard from "./components/users/Dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 import SignIn from "./components/session/SignIn";
 
 import path from "./domain";
@@ -60,21 +59,10 @@ const App = () => {
           />
           <Route
             exact
-            path="/users"
-            render={props =>
-              isAuthenticated ? (
-                <UsersDasboard {...props} setAuth={setAuth} />
-              ) : (
-                <Redirect to="/" />
-              )
-            }
-          />
-          <Route
-            exact
             path="/"
             render={props =>
               isAuthenticated ? (
-                <RegistriesDashboard {...props} setAuth={setAuth} />
+                <Dashboard {...props} setAuth={setAuth} />
               ) : (
                 <Redirect to="/login" />
               )

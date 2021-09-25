@@ -11,20 +11,20 @@ import PersonAdd from '@material-ui/icons/PersonAddSharp';
 
 import List from '@material-ui/core/List';
 
-export const UsersList = ({ showModal }) => {
+export const UsersList = ({ showModal, changeView }) => {
 
     return (
         <List>
             <div>
                 <ListSubheader inset>Funciones</ListSubheader>
-                <Link to="/" style={{ textDecoration: 'none', color: "inherit" }}>
-                    <ListItem button>
+                
+                <ListItem button onClick={() => changeView("registries")}>
                         <ListItemIcon>
                             <KeyboardReturnTwoTone />
                         </ListItemIcon>
                         <ListItemText primary="Regresar a registros" />
                     </ListItem>
-                </Link>
+              
                 <ListSubheader inset>Usuarios</ListSubheader>
                 <ListItem button onClick={() => showModal() } >
                     <ListItemIcon>

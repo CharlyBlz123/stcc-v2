@@ -2,9 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 import Title from '../title/Title';
-import UserForm from './UserForm';
+import UserFormAdd from './UserFormAdd';
 
-function FormModal(props) {
+function ModalContent(props) {
     return (
       <Modal
         {...props}
@@ -14,11 +14,11 @@ function FormModal(props) {
       >
         <Modal.Header closeButton>
           <Title>
-            Registrar usuario
+            {props.title}
           </Title>
         </Modal.Header>
         <Modal.Body>
-          <UserForm onHide={ props.onHide }/>
+          <UserFormAdd onHide={ props.onHide }/>
         </Modal.Body>
         <Modal.Footer>
           <p  className="text-muted">Al registrar al asociado, este recibirá un email con sus credenciales</p>
@@ -27,17 +27,18 @@ function FormModal(props) {
     );
   }
 
-const AddUserForm = ({ modalShow, setModalShow }) => {
+const UserModal = ({ modalShow, setModalShow, title }) => {
     
   return (
     <Fragment>
 
-      <FormModal
+      <ModalContent
         show={modalShow}
         onHide={() => setModalShow()}
+        title={title}
       />
     </Fragment>
   );
 }
 
-export default AddUserForm;
+export default UserModal;

@@ -5,10 +5,9 @@ const checkPassword = require('../utils/checkPassword');
 
 exports.new = async (req, res) => {
     try {
-        console.log(req.body)
         const { userCode, password } = req.body;
         const user = await db.user.findAll({
-            attributes: ['id', 'userName', 'userCode', 'password'],
+            attributes: ['id', 'userName', 'userCode', 'role', 'password'],
             where: {
                 userCode: {
                     [Op.eq]: userCode
@@ -22,7 +21,7 @@ exports.new = async (req, res) => {
         const validPassword = await checkPassword(password,  user[0].dataValues.password);
         if(!validPassword) return res.status(401).json("Password or Email is incorrect");
 
-        const token = jwtGenerator(user[0].dataValues.id)
+        const token = jwtGenerator(user[0].dataValues.id, user[0].dataValues.role)
         res.status(200).json({ token })
 
 

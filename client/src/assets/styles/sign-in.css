@@ -1,0 +1,138 @@
+
+.title-sign-in {
+    color: #1B2021;
+    font-weight: bold;
+    font-size: larger;
+}
+.card0 {
+    box-shadow: 0px 4px 8px 0px #757575;
+    border-radius: 0px
+}
+
+.card2 {
+    margin: 0px 40px
+}
+
+.logo {
+    width: 100px;
+    height: 90px;
+    margin-top: 20px;
+    margin-left: 35px
+}
+
+.cover-sign-in {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.border-line {
+    border-right: 1px solid #EEEEEE
+}
+
+.line {
+    height: 1px;
+    width: 45%;
+    background-color: #E0E0E0;
+    margin-top: 10px
+}
+
+.text-sm {
+    font-size: 14px !important
+}
+
+::placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+    font-weight: 300
+}
+
+:-ms-input-placeholder {
+    color: #BDBDBD;
+    font-weight: 300
+}
+
+::-ms-input-placeholder {
+    color: #BDBDBD;
+    font-weight: 300
+}
+
+.input-sign-in {
+    padding: 10px 12px 10px 12px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    margin-top: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 14px;
+    letter-spacing: 1px
+}
+
+.input-sign-in:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #ADC98B;
+    outline-width: 0
+}
+
+button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0
+}
+
+.text-sign-up{
+    color: #ADC98B;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.text-sign-up:hover{
+    color: #1B2021;
+    
+}
+
+
+.btn-green {
+    background-color: #ADC98B;
+    font-size: small;
+    font-weight: 600;
+    width: 150px;
+    color: #1B2021;
+    border-radius: 2px;
+}
+
+.btn-green:hover {
+    color: #ADC98B;
+    background-color: #1B2021;
+    cursor: pointer
+    
+}
+
+.bg-blue {
+    color: #1B2021;
+    background-color: #ADC98B;
+}
+
+
+@media screen and (max-width: 991px) {
+
+    .cover-sign-in{
+        width: 220px;
+        height: 220px
+    }
+
+    .border-line {
+        border-right: none
+    }
+
+    .card2 {
+        border-top: 1px solid #EEEEEE !important;
+        margin: 0px 15px
+    }
+}

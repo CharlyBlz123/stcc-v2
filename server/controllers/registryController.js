@@ -2,11 +2,6 @@ const db = require('../models/index.js');
 const { Op } = require('sequelize');
 const socket = require('../index');
 
-
-socket.io.on("connection", (socket) => {
-    console.log(socket.id);
-  })
-
 exports.getAll = async (req, res) => {
     try {
         const registries = await db.registry.findAll({

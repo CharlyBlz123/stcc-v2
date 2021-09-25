@@ -11,7 +11,7 @@ const mailer = require('../templates/newUser.template.js')
 
 exports.create = async (req, res) => {
     try {
-        const { name, code, email, curp, phone } = req.body;
+        const { name, code, email, curp, phone, role } = req.body;
         const userExists = await db.user.findAll({
             attributes: ['id', 'userName', 'email'],
             where: {
@@ -32,7 +32,8 @@ exports.create = async (req, res) => {
                 email: email,
                 curp: curp,
                 phone: phone,
-                password: encryptedPassword
+                password: encryptedPassword,
+                role: role
             },
         )
 
@@ -43,8 +44,6 @@ exports.create = async (req, res) => {
             res.status(200).json({ message: "User was not create" })
         }
 
-
-
     } catch (error) {
         console.log(error.message);
         res.status(500).json("Server error")
@@ -54,6 +53,7 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
+        
         const users = await db.user.findAll({
             attributes: ['id', 'userName', 'userCode', 'email', 'curp', 'status', 'phone']
         });
@@ -66,12 +66,13 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
+    console.log(req.user)
     try {
         const users = await db.user.findAll({
             attributes: ['id', 'userName', 'email', 'curp', 'userCode', 'phone'],
             where: {
                 id: {
-                    [Op.eq]: req.user
+                    [Op.eq]: req.user.id
                 }
             }
         });
