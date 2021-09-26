@@ -42,7 +42,6 @@ const UserFormAdd = ({ onHide }) => {
                 
                 <InputUserForm 
                     label="Nombre"
-                    controlId="formGridName"
                     id="name"
                     type="text"
                     placeholder="Ingresa el nombre del asociado"
@@ -54,7 +53,6 @@ const UserFormAdd = ({ onHide }) => {
                 
                 <InputUserForm 
                     label="Email"
-                    controlId="formGridEmail"
                     id="email"
                     type="email"
                     placeholder="Ingresa un email"
@@ -64,7 +62,6 @@ const UserFormAdd = ({ onHide }) => {
                 />
                 <InputUserForm 
                     label="Teléfono"
-                    controlId="formGridPhone"
                     id="phone"
                     type="number"
                     placeholder="Número de contacto"
@@ -76,7 +73,6 @@ const UserFormAdd = ({ onHide }) => {
                 
                 <InputUserForm 
                     label="CURP"
-                    controlId="formGridCurp"
                     id="curp"
                     type="text"
                     placeholder="Clave Única de Registro de Población"
@@ -85,7 +81,6 @@ const UserFormAdd = ({ onHide }) => {
                 />
                 <InputUserForm 
                     label="Código de usuario"
-                    controlId="formGridUserCode"
                     id="userCode"
                     type="text"
                     placeholder="Número de control"
@@ -94,7 +89,6 @@ const UserFormAdd = ({ onHide }) => {
                 />
                 <SelectUserForm 
                     label="Rol del usuario"
-                    controlId="formGridUserRole"
                     id="role"
                     setValue={setRole}
                 />

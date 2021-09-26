@@ -11,7 +11,6 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import List from '@material-ui/core/List';
-import { Link } from 'react-router-dom';
 
 export const PropertiesList = ({ setInformation, changeView }) => {
 

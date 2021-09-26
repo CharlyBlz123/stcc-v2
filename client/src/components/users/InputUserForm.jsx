@@ -4,13 +4,13 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
 
-const InputUserForm = ({ id, type, placeholder, value, label, controlId, setValue }) => {
+const InputUserForm = ({ id, type, placeholder, value, label, setValue, isDisable }) => {
     const onChange = (event) => {
         setValue(event.target.value);
     }
 
     return(
-        <Form.Group as={Col} controlId={ controlId }>
+        <Form.Group as={Col}>
                     <Form.Floating>
                         <Form.Control
                             id={ id }
@@ -18,6 +18,7 @@ const InputUserForm = ({ id, type, placeholder, value, label, controlId, setValu
                             placeholder={placeholder}
                             value={ value }
                             onChange={event => onChange(event)}
+                            disabled={isDisable}
                         />
                         <label htmlFor={ id }>{ label }</label>
                     </Form.Floating>

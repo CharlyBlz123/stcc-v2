@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,7 +18,6 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import CheckIcon from '@material-ui/icons/Check';
 import BlockIcon from '@material-ui/icons/Block';
-import IconButton from '@mui/material/IconButton';
 
 import Title from '../title/Title';
 
@@ -32,9 +31,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 const UsersTable = ({ users, setUser }) => {
     const classes = useStyles();
+    
     return (
         <Fragment>
             <Title>Usuarios</Title>
@@ -83,11 +82,6 @@ const UsersTable = ({ users, setUser }) => {
                     ))}
                 </TableBody>
             </Table>
-            <div className={classes.seeMore}>
-                <Link color="primary" href="#" onClick={preventDefault}>
-                    Mostrar más
-                </Link>
-            </div>
         </Fragment>
     );
 }

@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
             },
         )
 
-        if(newUser) {
+        if (newUser) {
             mailer.sendEmailWithCredentials(name, code, email, password);
             res.status(201).json({ message: "User created" })
         } else {
@@ -53,9 +53,9 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        
+
         const users = await db.user.findAll({
-            attributes: ['id', 'userName', 'userCode', 'email', 'curp', 'status', 'phone']
+            attributes: ['id', 'userName', 'userCode', 'role', 'email', 'curp', 'status', 'phone']
         });
         res.status(200).json(users);
     } catch (error) {
@@ -89,23 +89,35 @@ exports.getOne = async (req, res) => {
 exports.updateInformation = async (req, res) => {
 
     try {
-        const { name, curp, phone } = req.body;
-        await db.user.update(
-            {
-                userName: `"${name}"`,
-                curp: `"${curp}"`,
-                phone: `"${phone}"`,
-            }, {
-            where: {
-                id: req.user
-            }
-        });
+        const body = await req.body;
+        if (req.user.role === "admin" || req.user.id === body.id) {
+            await db.user.update(body, {
+                where: {
+                    id: body.id
+                }
+            });
 
-        res.status(200).json("User´s information updated!");
+            res.status(200).json({
+                statusCode: 200,
+                message: "user updated"
+            });
+        } else {
+            res.status(401).json(
+                {
+                    statusCode: 401,
+                    message: "Unauthorized"
+                }
+            );
+        }
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json("Server error")
+        res.status(500).json(
+            {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        )
     }
 
 }
@@ -143,8 +155,8 @@ exports.updatePassword = async (req, res) => {
             }
         });
 
-        const validPassword = await checkPassword(password,  user[0].dataValues.password);
-        if(!validPassword) return res.status(401).json("Password incorrect");
+        const validPassword = await checkPassword(password, user[0].dataValues.password);
+        if (!validPassword) return res.status(401).json("Password incorrect");
 
         const encryptedPassword = await passwordGenerator(newPassword);
 
@@ -167,12 +179,39 @@ exports.updatePassword = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    try {
 
+    try {
+        if (req.user.role === "admin") {
+            const body = req.body;
+            await db.user.update({
+                status: false
+            }, {
+                where: {
+                    id: body.id
+                }
+            });
+
+            res.status(200).json({
+                statusCode: 200,
+                message: "user delited"
+            });
+        } else {
+            res.status(401).json(
+                {
+                    statusCode: 401,
+                    message: "Unauthorized"
+                }
+            );
+        }
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json("Server error")
+        res.status(500).json(
+            {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        )
     }
 
 }

@@ -25,6 +25,7 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
   const [modalShowAdd, setModalShowAdd] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(undefined);
+  const [updated, setUpdated] = useState(false);
 
   const getUsers = async () => {
     try {
@@ -49,9 +50,20 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
     setSelectedUser(user);
   }
 
+  const tellUserUpdated = () => {
+    setUpdated(true);
+  }
+
   useEffect(() => {
     getUsers();
   }, [])
+
+  useEffect(() => {
+    if(updated){
+      getUsers();
+      setUpdated(false);
+    }
+  }, [updated])
 
   return (
     <Fragment>
@@ -62,18 +74,19 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={12}>
-              <Paper className={fixedHeightPaper}>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
               {selectedUser &&(
-                <UserFormEdit user={ selectedUser }/>
+                <UserFormEdit 
+                  user={ selectedUser } 
+                  tellUserUpdated={tellUserUpdated}
+                  setUser={setUser}                />
               )}
               {!selectedUser &&(
                 <p>Nada</p>
               )}
               </Paper>
             </Grid>
-            {/* Recent RegistriesTable */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <UsersTable users={users} setUser={ setUser } />

@@ -71,7 +71,7 @@ const MainRegistries = ( { handleDrawerClose, open, changeView } ) => {
         <DashboardDreawer handleDrawerClose={handleDrawerClose} classes={classes} open={open}>
           <PropertiesList setInformation={ setInformation } changeView={ changeView } />
         </DashboardDreawer>
-      <main className={classes.content}>
+      <main className={classes.content} >
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
