@@ -11,39 +11,43 @@ const mailer = require('../templates/newUser.template.js')
 
 exports.create = async (req, res) => {
     try {
-        const { name, code, email, curp, phone, role } = req.body;
-        const userExists = await db.user.findAll({
-            attributes: ['id', 'userName', 'email'],
-            where: {
-                email: {
-                    [Op.eq]: email
+        if (req.user.role === "admin") {
+            const { name, code, email, curp, phone, role } = req.body;
+            const userExists = await db.user.findAll({
+                attributes: ['id', 'userName', 'email'],
+                where: {
+                    email: {
+                        [Op.eq]: email
+                    }
                 }
+            });
+            if (userExists.length !== 0) return res.status(400).json("user already exists");
+
+            const password = passwordRandom();
+            const encryptedPassword = await passwordGenerator(password);
+
+            const newUser = await db.user.create(
+                {
+                    userName: name,
+                    userCode: code,
+                    email: email,
+                    curp: curp,
+                    phone: phone,
+                    password: encryptedPassword,
+                    role: role
+                },
+            )
+
+            if (newUser) {
+                mailer.sendEmailWithCredentials(name, code, email, password);
+                res.status(201).json({ message: "User created" })
+            } else {
+                res.status(204).json({ message: "User was not create" })
             }
-        });
-        if (userExists.length !== 0) return res.status(401).json("user already exists");
-
-        const password = passwordRandom();
-        const encryptedPassword = await passwordGenerator(password);
-
-        const newUser = await db.user.create(
-            {
-                userName: name,
-                userCode: code,
-                email: email,
-                curp: curp,
-                phone: phone,
-                password: encryptedPassword,
-                role: role
-            },
-        )
-
-        if (newUser) {
-            mailer.sendEmailWithCredentials(name, code, email, password);
-            res.status(201).json({ message: "User created" })
         } else {
-            res.status(200).json({ message: "User was not create" })
-        }
+            res.status(401).json({message: "User Not authorized"})
 
+        }
     } catch (error) {
         console.log(error.message);
         res.status(500).json("Server error")
@@ -96,11 +100,11 @@ exports.updateInformation = async (req, res) => {
                     id: body.id
                 }
             });
-
             res.status(200).json({
                 statusCode: 200,
                 message: "user updated"
             });
+
         } else {
             res.status(401).json(
                 {
@@ -119,28 +123,6 @@ exports.updateInformation = async (req, res) => {
             }
         )
     }
-
-}
-
-exports.updateEmail = async (req, res) => {
-    try {
-        const { email } = req.body;
-        await db.user.update(
-            {
-                email: `"${email}"`
-            }, {
-            where: {
-                id: req.user
-            }
-        });
-
-        res.status(200).json("User´s information updated!");
-
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json("Server error")
-    }
-
 
 }
 exports.updatePassword = async (req, res) => {
@@ -194,6 +176,44 @@ exports.delete = async (req, res) => {
             res.status(200).json({
                 statusCode: 200,
                 message: "user delited"
+            });
+        } else {
+            res.status(401).json(
+                {
+                    statusCode: 401,
+                    message: "Unauthorized"
+                }
+            );
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json(
+            {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        )
+    }
+
+}
+
+exports.undelete = async (req, res) => {
+
+    try {
+        if (req.user.role === "admin") {
+            const body = req.body;
+            await db.user.update({
+                status: true
+            }, {
+                where: {
+                    id: body.id
+                }
+            });
+
+            res.status(200).json({
+                statusCode: 200,
+                message: "user activated"
             });
         } else {
             res.status(401).json(

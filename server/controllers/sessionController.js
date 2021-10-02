@@ -15,11 +15,14 @@ exports.new = async (req, res) => {
             }
         });
 
-
-        if(user.length === 0) return res.status(401).json("Password or Email is incorrect");
+        if(user.length === 0) return res.status(401).json({
+            message: "Password or Email is incorrect"
+        });
 
         const validPassword = await checkPassword(password,  user[0].dataValues.password);
-        if(!validPassword) return res.status(401).json("Password or Email is incorrect");
+        if(!validPassword) return res.status(401).json({
+            message: "Password or Email is incorrect"
+        });
 
         const token = jwtGenerator(user[0].dataValues.id, user[0].dataValues.role)
         res.status(200).json({ token })
@@ -27,7 +30,7 @@ exports.new = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Server error")
+        res.status(500).send({message: "Server error"})
     }
 
 }

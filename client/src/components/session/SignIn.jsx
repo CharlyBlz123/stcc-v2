@@ -3,7 +3,13 @@ import Domain from '../../domain';
 
 import coverImage from '../../assets/images/lemon-sign-in.png';
 import '../../assets/styles/sign-in.css'
+import CustomAlert from '../../utils/customAlert';
+
 const SignIn = ({ setAuth }) => {
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [messageAlert, setMessageAlert] = useState("Welcome");
+    const [typeAlert, setTypeAlert] = useState("info");
 
     const [values, setValues] = useState({
         userCode: "",
@@ -26,10 +32,23 @@ const SignIn = ({ setAuth }) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
-
-            const parseResponse = await response.json();
-            localStorage.setItem("token", parseResponse.token);
-            setAuth(true);
+            
+            if (response.status === 200){
+                const parseResponse = await response.json();
+                localStorage.setItem("token", parseResponse.token);
+                setAuth(true);
+                setMessageAlert("Sesión iniciada con éxito")
+                setTypeAlert("success")
+                setShowAlert(true)
+            } else if(response.status === 401){
+                setMessageAlert("Credenciales incorrectas")
+                setTypeAlert("warning")
+                setShowAlert(true)
+            } else if(response.status === 500) {
+                messageAlert("Error interno del servidor")
+                typeAlert("error")
+                showAlert(true)
+            }
         } catch (err) {
             console.error(err.message);
         }
@@ -40,7 +59,7 @@ const SignIn = ({ setAuth }) => {
                 <div className="row d-flex">
                     <div className="col-lg-6">
                         <div className="row px-3 justify-content-center mt-4 mb-5 border-line">
-                            <img className="cover-sign-in" src={ coverImage } />
+                            <img className="cover-sign-in" src={coverImage} />
                         </div>
                     </div>
                     <div className="col-lg-6">
@@ -51,10 +70,10 @@ const SignIn = ({ setAuth }) => {
                                     <label className="mb-1">
                                         <h6 className="mb-0 text-sm">Número de cuenta</h6>
                                     </label>
-                                    <input 
+                                    <input
                                         className="mb-4 input-sign-in"
                                         type="text" name="userCode"
-                                        placeholder="Ingresa tu número de cuenta" 
+                                        placeholder="Ingresa tu número de cuenta"
                                         value={userCode}
                                         onChange={event => onChange(event)}
                                     />
@@ -69,7 +88,7 @@ const SignIn = ({ setAuth }) => {
                                         name="password"
                                         placeholder="Ingresa tu contraseña"
                                         value={password}
-                                        onChange={event => onChange(event)}    
+                                        onChange={event => onChange(event)}
                                     />
                                 </div>
                                 <div className="row px-3 mb-4">
@@ -80,6 +99,7 @@ const SignIn = ({ setAuth }) => {
                                     <button type="submit" className="btn btn-green text-center">Aceptar</button>
                                 </div>
                             </form>
+             <CustomAlert open={showAlert} type={typeAlert} message={messageAlert} setOpen={setShowAlert} />
                         </div>
                     </div>
                 </div>

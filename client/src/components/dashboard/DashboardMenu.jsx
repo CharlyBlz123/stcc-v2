@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 
-const UserMenu = ( { setAuth } ) => {
+const UserMenu = ( { setAuth, setView } ) => {
     
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -37,7 +37,10 @@ const UserMenu = ( { setAuth } ) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleClose}>Perfil</MenuItem>
+                <MenuItem onClick={() => {
+                        setView("profile");
+                        handleClose();
+                    }}>Perfil</MenuItem>
                 <MenuItem onClick={(event) => logOut(event)}>Cerrar sesión</MenuItem>
             </Menu>
         </Fragment>

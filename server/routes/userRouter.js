@@ -7,8 +7,8 @@ router.get('/', authorization, userController.getAll);
 router.post("/", authorization, validInfo, userController.create);
 router.get('/information', authorization, userController.getOne);
 router.patch('/', authorization, userController.updateInformation);
-router.patch('/edit-email', authorization, userController.updateEmail);
 router.patch('/edit-password', authorization, userController.updatePassword);
+router.patch('/deleted-user', authorization, userController.undelete);
 router.delete('/', authorization, userController.delete);
 
 

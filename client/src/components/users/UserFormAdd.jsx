@@ -9,7 +9,14 @@ import SelectUserForm from './SelectUserForm';
 
 import Domain from '../../domain';
 
-const UserFormAdd = ({ onHide }) => {
+const UserFormAdd = ({
+    onHide,
+    tellUserUpdated,
+    showAlert,
+    messageAlert,
+    typeAlert,
+
+}) => {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -30,7 +37,33 @@ const UserFormAdd = ({ onHide }) => {
             });
 
             const parseResponse = await response.json();
-            onHide();
+            if(response.status === 201){
+                typeAlert("success");
+                messageAlert("El usuario se registró con éxito");
+                showAlert(true);
+                onHide();
+                tellUserUpdated(true);
+            } else if(response.status === 204){
+                typeAlert("error");
+                messageAlert("El usuario no se pudo registrar");
+                showAlert(true);
+                onHide();
+            }if(response.status === 401){
+                typeAlert("warning");
+                messageAlert("No estás autorizado para registrar un nuevo usuario");
+                showAlert(true);
+                onHide();
+            } if(response.status === 400){
+                typeAlert("info");
+                messageAlert("El usuario ya se encuentra registrado");
+                showAlert(true);
+            }
+            if(response.status === 500){
+                typeAlert("error");
+                messageAlert("Error interno del servidor");
+                showAlert(true);
+            }
+
         } catch (err) {
             console.error(err.message);
         }
@@ -39,8 +72,8 @@ const UserFormAdd = ({ onHide }) => {
     return (
         <Form onSubmit={onSubmitForm}>
             <Row className="mb-3">
-                
-                <InputUserForm 
+
+                <InputUserForm
                     label="Nombre"
                     id="name"
                     type="text"
@@ -50,17 +83,17 @@ const UserFormAdd = ({ onHide }) => {
                 />
             </Row>
             <Row className="mb-3">
-                
-                <InputUserForm 
+
+                <InputUserForm
                     label="Email"
                     id="email"
                     type="email"
                     placeholder="Ingresa un email"
                     value={email}
                     setValue={setEmail}
-                   
+
                 />
-                <InputUserForm 
+                <InputUserForm
                     label="Teléfono"
                     id="phone"
                     type="number"
@@ -70,8 +103,8 @@ const UserFormAdd = ({ onHide }) => {
                 />
             </Row>
             <Row className="mb-3">
-                
-                <InputUserForm 
+
+                <InputUserForm
                     label="CURP"
                     id="curp"
                     type="text"
@@ -79,7 +112,7 @@ const UserFormAdd = ({ onHide }) => {
                     value={curp}
                     setValue={setCurp}
                 />
-                <InputUserForm 
+                <InputUserForm
                     label="Código de usuario"
                     id="userCode"
                     type="text"
@@ -87,13 +120,13 @@ const UserFormAdd = ({ onHide }) => {
                     value={code}
                     setValue={setCode}
                 />
-                <SelectUserForm 
+                <SelectUserForm
                     label="Rol del usuario"
                     id="role"
                     setValue={setRole}
                 />
             </Row>
-            <Button variant="outline-secondary" type="submit" style={{marginRight: '1vw' }}>
+            <Button variant="outline-secondary" type="submit" style={{ marginRight: '1vw' }}>
                 Registrar
             </Button>
             <Button variant="danger" type="button" onClick={() => onHide()}>

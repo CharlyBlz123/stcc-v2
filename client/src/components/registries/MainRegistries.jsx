@@ -2,6 +2,8 @@ import React, { Fragment, useState, useEffect } from 'react';
 import socket from '../../Socket';
 import path from '../../domain';
 
+import CustomAlert from '../../utils/customAlert';
+
 import clsx from 'clsx';
 
 import Container from '@material-ui/core/Container';
@@ -19,6 +21,10 @@ import DashboardFooter from '../dashboard/DashboardFooter';
 
 
 const MainRegistries = ( { handleDrawerClose, open, changeView } ) => {
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState("Welcome");
+  const [typeAlert, setTypeAlert] = useState("info");
 
   const classes = dashboardStyles();
 
@@ -71,18 +77,18 @@ const MainRegistries = ( { handleDrawerClose, open, changeView } ) => {
         <DashboardDreawer handleDrawerClose={handleDrawerClose} classes={classes} open={open}>
           <PropertiesList setInformation={ setInformation } changeView={ changeView } />
         </DashboardDreawer>
-      <main className={classes.content} >
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        <CustomAlert open={showAlert} type={typeAlert} message={messageAlert} setOpen={setShowAlert} />
           <Grid container spacing={3}>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={8} lg={10}>
               <Paper className={fixedHeightPaper}>
                 <Chart chartInformation= {chartInformation} registries={ registries } />
               </Paper>
             </Grid>
             {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={4} lg={2}>
               <Paper className={fixedHeightPaper}>
                 <ValueIndicators registries={ registries } property={ chartInformation.property } />
               </Paper>
@@ -96,7 +102,6 @@ const MainRegistries = ( { handleDrawerClose, open, changeView } ) => {
           </Grid>
           <DashboardFooter />
         </Container>
-      </main>
     </Fragment>
     
   );

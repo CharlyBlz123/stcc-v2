@@ -18,7 +18,13 @@ function ModalContent(props) {
           </Title>
         </Modal.Header>
         <Modal.Body>
-          <UserFormAdd onHide={ props.onHide }/>
+          <UserFormAdd
+            onHide={ props.onHide }
+            getUsers={props.tellUserUpdated}
+            showAlert={props.showAlert}
+            messageAlert={props.messageAlert}
+            typeAlert={props.typeAlert}
+            />
         </Modal.Body>
         <Modal.Footer>
           <p  className="text-muted">Al registrar al asociado, este recibirá un email con sus credenciales</p>
@@ -27,7 +33,14 @@ function ModalContent(props) {
     );
   }
 
-const UserModal = ({ modalShow, setModalShow, title }) => {
+const UserModal = ({ 
+  modalShow,
+  setModalShow,
+  title, tellUserUpdated,
+  showAlert,
+  messageAlert,
+  typeAlert,
+}) => {
     
   return (
     <Fragment>
@@ -36,6 +49,10 @@ const UserModal = ({ modalShow, setModalShow, title }) => {
         show={modalShow}
         onHide={() => setModalShow()}
         title={title}
+        tellUserUpdated={() => tellUserUpdated()}
+        showAlert={showAlert}
+        messageAlert={messageAlert}
+        typeAlert={typeAlert}
       />
     </Fragment>
   );

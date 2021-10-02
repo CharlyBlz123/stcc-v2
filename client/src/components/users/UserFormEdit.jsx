@@ -10,7 +10,14 @@ import Domain from '../../domain';
 import Title from '../title/Title';
 import UserConfirmDeleteModal from "./UserConfirmDeleteModal";
 
-const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
+const UserFormEdit = ({
+  user,
+  setUser,
+  tellUserUpdated,
+  showAlert,
+  messageAlert,
+  typeAlert
+}) => {
 
   const [userName, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,19 +45,38 @@ const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
           headers: { "Content-Type": "application/json", token: localStorage.token },
           body: JSON.stringify(body)
         });
-        const parseResponse = await response.json();
-        if (parseResponse.statusCode === 200) {
-          alert(parseResponse.message);
+        if (response.status === 200) {
+          const parseResponse = await response.json();
+          messageAlert("Usuario actualizado con éxito")
+          typeAlert("success");
+          showAlert(true);
           setDisableEdit(!disableEdit);
           setUser(undefined);
           tellUserUpdated(true);
+        } else if (response.status === 401) {
+          messageAlert("No tienes los permisos necesarios para actualizar este usuario")
+          typeAlert("warning");
+          showAlert(true);
+          setDisableEdit(!disableEdit);
+          setUser(undefined);
+        } else {
+          messageAlert("Error interno del servidor, prueba más tarde")
+          typeAlert("error");
+          showAlert(true);
+          setDisableEdit(!disableEdit);
+          setUser(undefined);
         }
       } else {
-        alert("Nada para actualizar!");
+        messageAlert("¡Los datos introducidos son iguales a los actuales!")
+        typeAlert("warning")
+        showAlert(true)
         setDisableEdit(!disableEdit);
       }
     } catch (err) {
       console.error(err.message);
+      messageAlert("Fallo al procesar petición")
+      typeAlert("error")
+      showAlert(true)
     }
   }
 
@@ -64,10 +90,54 @@ const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
         body: JSON.stringify(body)
       });
       const parseResponse = await response.json();
-      if (parseResponse.statusCode === 200) {
-        alert(parseResponse.message);
+      if (response.status === 200) {
+        messageAlert("Es usuario pasó a estado INACTIVO")
+        typeAlert("success")
+        showAlert(true)
         setUser(undefined);
         tellUserUpdated(true);
+      } else if (response.status === 401) {
+        messageAlert("No tienes los permisos necesario para desabilitar a este usuario")
+        typeAlert("warning")
+        showAlert(true)
+      } else {
+        messageAlert("Error interno del servidor")
+        typeAlert("error")
+        showAlert(true)
+      }
+
+    } catch (err) {
+      console.error(err.message);
+      messageAlert("Fallo al procesar petición")
+      typeAlert("error")
+      showAlert(true)
+    }
+  }
+
+  const onActiveUser = async () => {
+    try {
+      const id = user.id;
+      let body = { id };
+      const response = await fetch(`${Domain}users/deleted-user`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", token: localStorage.token },
+        body: JSON.stringify(body)
+      });
+      const parseResponse = await response.json();
+      if (response.status === 200) {
+        messageAlert("Es usuario pasó a estado ACTIVO")
+        typeAlert("success")
+        showAlert(true)
+        setUser(undefined);
+        tellUserUpdated(true);
+      } else if (response.status === 401) {
+        messageAlert("No tienes los permisos necesario para activar a este usuario")
+        typeAlert("warning")
+        showAlert(true)
+      } else {
+        messageAlert("Error interno del servidor")
+        typeAlert("error")
+        showAlert(true)
       }
 
     } catch (err) {
@@ -97,7 +167,7 @@ const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
   return (
     <Fragment >
       <Title>
-        Información de usuario: {user.userName}
+        Información de usuario: {user.userName} - {user.status ? "Activo" : "Inactivo"}
       </Title>
 
       <Form onSubmit={onSubmitForm}>
@@ -157,7 +227,7 @@ const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
           />
         </Row>
 
-        {disableEdit && (
+        {disableEdit && user.status && (
           <Fragment>
             <Button
               variant="outline-secondary"
@@ -167,8 +237,21 @@ const UserFormEdit = ({ user, setUser, tellUserUpdated }) => {
             >
               Editar
             </Button>
-            <UserConfirmDeleteModal userName={user.userName} deleteUser={onDeleteUser} />
+            <UserConfirmDeleteModal
+              title="Eliminar usuario"
+              message={`¿Seguro que deseas eliminar a ${user.userName} su estado pasará a INACTIVO`}
+              action={onDeleteUser}
+              actionName="Eliminar"
+            />
           </Fragment>
+        )}
+        {!user.status && (
+          <UserConfirmDeleteModal
+            title="Activar usuario"
+            message={`¿Seguro que deseas activar a ${user.userName} su estado pasará a ACTIVO`}
+            action={onActiveUser}
+            actionName="Activar"
+          />
         )}
         {!disableEdit && (
           <Fragment>

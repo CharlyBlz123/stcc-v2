@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import path from '../../domain';
 
+import CustomAlert from '../../utils/customAlert';
+
 import clsx from 'clsx';
 import Paper from '@material-ui/core/Paper';
 import {Container} from '@material-ui/core';
@@ -15,8 +17,13 @@ import DashboardDreawer from '../dashboard/DashBoardDrawer';
 import dashboardStyles from '../../assets/styles/dashboard-styles';
 import DashboardFooter from '../dashboard/DashboardFooter';
 import UserFormEdit from './UserFormEdit';
+import Title from '../title/Title';
 
 const MainUsers = ({ handleDrawerClose, open, changeView }) => {
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState("Welcome");
+  const [typeAlert, setTypeAlert] = useState("info");
 
   const classes = dashboardStyles();
 
@@ -71,8 +78,8 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
         <UsersList showModal={setShowModalAdd} changeView={changeView} />
       </DashboardDreawer>
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        <CustomAlert open={showAlert} type={typeAlert} message={messageAlert} setOpen={setShowAlert} />
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
@@ -80,10 +87,14 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
                 <UserFormEdit 
                   user={ selectedUser } 
                   tellUserUpdated={tellUserUpdated}
-                  setUser={setUser}                />
+                  setUser={setUser}
+                  showAlert={setShowAlert}
+                  messageAlert={setMessageAlert}
+                  typeAlert={setTypeAlert}
+                  />
               )}
               {!selectedUser &&(
-                <p>Nada</p>
+                <Title>Selecciona un usuario para ver sus datos</Title>
               )}
               </Paper>
             </Grid>
@@ -100,6 +111,10 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
         modalShow={modalShowAdd}
         setModalShow={setShowModalAdd}
         title="Registrar colaborador"
+        tellUserUpdated={tellUserUpdated}
+        showAlert={setShowAlert}
+        messageAlert={setMessageAlert}
+        typeAlert={setTypeAlert}
       />
     </Fragment>
   );

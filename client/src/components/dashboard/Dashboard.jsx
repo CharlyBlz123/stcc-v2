@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import DashboardMenu from './DashboardMenu';
 import MainRegistries from '../registries/MainRegistries';
 import MainUsers from '../users/MainUsers';
+import MainProfile from '../profile/MainProfile';
 
 import dashboardStyles from '../../assets/styles/dashboard-styles';
 
@@ -31,6 +32,8 @@ const Dashboard = ({ setAuth }) => {
 
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("registries");
+
+  
 
   const changeView = (viewName) => {
     setView(viewName)
@@ -53,16 +56,19 @@ const Dashboard = ({ setAuth }) => {
           <Typography component="h1" variant="h6" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          <DashboardMenu setAuth={setAuth} />
+          <DashboardMenu setAuth={setAuth} setView={setView} />
         </Toolbar>
       </AppBar>
-      
-      {view === "registries" &&(
-      <MainRegistries handleDrawerClose={ handleDrawerClose } open={ open } changeView={ changeView }  />
-      )}
-      {view === "users" &&(
-      <MainUsers handleDrawerClose={ handleDrawerClose } open={ open } changeView={ changeView }  />
-      )}
+          
+          {view === "registries" &&(
+            <MainRegistries handleDrawerClose={ handleDrawerClose } open={ open } changeView={ changeView }  />
+            )}
+          {view === "users" &&(
+            <MainUsers handleDrawerClose={ handleDrawerClose } open={ open } changeView={ changeView }  />
+            )}
+            {view === "profile" &&(
+            <MainProfile handleDrawerClose={ handleDrawerClose } open={ open } changeView={ changeView }  />
+            )}
     </div>
   );
 }
