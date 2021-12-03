@@ -1,10 +1,9 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import Dashboard from "./components/dashboard/Dashboard";
 import SignIn from "./components/session/SignIn";
-
-import path from "./domain";
+import AuthContext from "./AuthContext";
 
 import './assets/styles/app.css';
 
@@ -13,45 +12,18 @@ import './assets/styles/app.css';
 
 const App = () => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const setAuth = boolean => {
-    setIsAuthenticated(boolean);
-  };
-
-  const isAuth = async () => {
-    try {
-      const response = await fetch(`${path}auth/is-verify`, {
-        method: "GET",
-        headers: { token: localStorage.token }
-      });
-
-      const parseRes = await response.json();
-      if (parseRes === true) setAuth(true);
-      else {
-        localStorage.removeItem("token");
-        setAuth(false)
-      }
-
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-
-  useEffect(() => {
-    isAuth()
-  });
+  const context = useContext(AuthContext);
 
   return (
-    <div>
+    <>
       <Router>
         <Switch>
           <Route
             exact
             path="/login"
             render={props =>
-              !isAuthenticated ? (
-                <SignIn {...props} setAuth={setAuth} />
+              !context.isLoggedIn ? (
+                <SignIn {...props} />
               ) : (
                 <Redirect to="/" />
               )
@@ -61,8 +33,8 @@ const App = () => {
             exact
             path="/"
             render={props =>
-              isAuthenticated ? (
-                <Dashboard {...props} setAuth={setAuth} />
+              context.isLoggedIn ? (
+                <Dashboard {...props} />
               ) : (
                 <Redirect to="/login" />
               )
@@ -70,8 +42,8 @@ const App = () => {
           />
         </Switch>
       </Router>
-    </div>
+    </>
   );
 }
 
-export default App;
+export default React.memo(App);

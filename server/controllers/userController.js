@@ -70,7 +70,6 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    console.log(req.user)
     try {
         const users = await db.user.findAll({
             attributes: ['id', 'userName', 'email', 'curp', 'userCode', 'phone'],
@@ -80,7 +79,6 @@ exports.getOne = async (req, res) => {
                 }
             }
         });
-
         res.status(200).json(users);
     } catch (error) {
         console.log(error.message);
@@ -104,6 +102,8 @@ exports.updateInformation = async (req, res) => {
                 statusCode: 200,
                 message: "user updated"
             });
+            console.log(req.body.id )
+            console.log(req.user.id )
 
         } else {
             res.status(401).json(
@@ -125,29 +125,33 @@ exports.updateInformation = async (req, res) => {
     }
 
 }
-exports.updatePassword = async (req, res) => {
+exports.updateCredentials = async (req, res) => {
     try {
-        const { password, newPassword } = req.body;
+        const body = req.body;
+
         const user = await db.user.findAll({
             attributes: ['password'],
             where: {
                 id: {
-                    [Op.eq]: req.user
+                    [Op.eq]: req.user.id
                 }
             }
         });
-
-        const validPassword = await checkPassword(password, user[0].dataValues.password);
+        const validPassword = await checkPassword(body.oldPassword, user[0].dataValues.password);
         if (!validPassword) return res.status(401).json("Password incorrect");
-
-        const encryptedPassword = await passwordGenerator(newPassword);
-
-        await db.user.update(
-            {
-                password: `${encryptedPassword}`
-            }, {
+        
+        let newData = {};
+        if(body.password !== undefined){
+            const encryptedPassword = await passwordGenerator(body.password);
+            newData = {password: encryptedPassword}
+            console.log(`new Data ${newData}`)
+        }
+        if(body.email){
+            newData = {email: body.email, ...newData}
+        }
+        await db.user.update(newData, {
             where: {
-                id: req.user
+                id: body.id
             }
         });
 
