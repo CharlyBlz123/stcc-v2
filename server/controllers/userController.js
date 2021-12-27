@@ -39,7 +39,12 @@ exports.create = async (req, res) => {
             )
 
             if (newUser) {
-                mailer.sendEmailWithCredentials(name, code, email, password);
+                const emailInfo = {
+                    subject: "Nueva cuenta en el STCC",
+                    title: "Bienvenido",
+                    message: "al STCC"
+                }
+                mailer.sendEmailWithCredentials(name, code, email, password, emailInfo);
                 res.status(201).json({ message: "User created" })
             } else {
                 res.status(204).json({ message: "User was not create" })
@@ -70,7 +75,6 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    console.log(req.user)
     try {
         const users = await db.user.findAll({
             attributes: ['id', 'userName', 'email', 'curp', 'userCode', 'phone'],
@@ -80,7 +84,6 @@ exports.getOne = async (req, res) => {
                 }
             }
         });
-
         res.status(200).json(users);
     } catch (error) {
         console.log(error.message);
@@ -94,6 +97,7 @@ exports.updateInformation = async (req, res) => {
 
     try {
         const body = await req.body;
+        console.log(req.user)
         if (req.user.role === "admin" || req.user.id === body.id) {
             await db.user.update(body, {
                 where: {
@@ -104,6 +108,8 @@ exports.updateInformation = async (req, res) => {
                 statusCode: 200,
                 message: "user updated"
             });
+            console.log(req.body.id )
+            console.log(req.user.id )
 
         } else {
             res.status(401).json(
@@ -125,29 +131,37 @@ exports.updateInformation = async (req, res) => {
     }
 
 }
-exports.updatePassword = async (req, res) => {
+exports.updateCredentials = async (req, res) => {
     try {
-        const { password, newPassword } = req.body;
+
+        
+        const {id, email, password, oldPassword} = req.body;
+
         const user = await db.user.findAll({
             attributes: ['password'],
             where: {
                 id: {
-                    [Op.eq]: req.user
+                    [Op.eq]: req.user.id
                 }
             }
         });
 
-        const validPassword = await checkPassword(password, user[0].dataValues.password);
+        console.log(oldPassword)
+        const validPassword = await checkPassword(oldPassword, user[0].dataValues.password);
         if (!validPassword) return res.status(401).json("Password incorrect");
-
-        const encryptedPassword = await passwordGenerator(newPassword);
-
-        await db.user.update(
-            {
-                password: `${encryptedPassword}`
-            }, {
+        
+        let newData = {};
+        if(password !== undefined){
+            const encryptedPassword = await passwordGenerator(password);
+            newData = {password: encryptedPassword}
+            console.log(`new Data ${newData}`)
+        }
+        if(email){
+            newData = {email: email, ...newData}
+        }
+        await db.user.update(newData, {
             where: {
-                id: req.user
+                id: id
             }
         });
 
@@ -158,6 +172,30 @@ exports.updatePassword = async (req, res) => {
         res.status(500).json("Server error")
     }
 
+}
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { id, name, code, email } = req.body;
+        const password = passwordRandom();
+        const encryptedPassword = await passwordGenerator(password);
+        let newData = {password: encryptedPassword};
+        await db.user.update(newData, {
+            where: {
+                id: id
+            }
+        });
+        const emailInfo = {
+            subject: "Contraseña restablecida",
+            title: "Nuevas credenciales",
+            message: "para el STCC"
+        }
+        mailer.sendEmailWithCredentials(name, code, email, password, emailInfo);
+        res.status(200).json("User´s information updated!");
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json("Server error")
+    }
 }
 
 exports.delete = async (req, res) => {

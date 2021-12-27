@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, useContext } from 'react';
+import AuthContext from '../../AuthContext';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,8 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 
-import BackspaceIcon from '@material-ui/icons/Backspace';
-import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import FeaturedVideoIcon from '@material-ui/icons/FeaturedVideo'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
@@ -18,21 +16,21 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import CheckIcon from '@material-ui/icons/Check';
 import BlockIcon from '@material-ui/icons/Block';
-
 import Title from '../title/Title';
 
-function preventDefault(event) {
-    event.preventDefault();
-}
+const UsersTable = ({ users, setUser, showAlert, typeAlert, messageAlert }) => {
 
-const useStyles = makeStyles((theme) => ({
-    seeMore: {
-        marginTop: theme.spacing(3),
-    },
-}));
+    const context = useContext(AuthContext);
 
-const UsersTable = ({ users, setUser }) => {
-    const classes = useStyles();
+    const showWarningAlert = () => {
+        typeAlert("info");
+        messageAlert("No tienes permiso para ver los detalles del usuario")
+        showAlert(true);
+    }
+
+    const handleCleckUserRol = (user) => {
+        context.user.role ==="admin" ? setUser(user) : showWarningAlert();
+    }
     
     return (
         <Fragment>
@@ -73,7 +71,7 @@ const UsersTable = ({ users, setUser }) => {
                                     style={{textTransform: 'capitalize'}}
                                     variant="text"
                                     endIcon={<VisibilityIcon />}
-                                    onClick={() => setUser(user)}
+                                    onClick={() => handleCleckUserRol(user)}
                                 >
                                     Ver
                                 </Button>

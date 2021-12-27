@@ -8,20 +8,20 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import EditAttributesIcon from '@material-ui/icons/EditAttributes';
 import List from '@material-ui/core/List';
 
-export const ProfileOptions = ({ changeView }) => {
+export const ProfileOptions = ({ changeView, changeForm}) => {
 
 
     return (
         <List>
             <div>
                 <ListSubheader inset>Opciones</ListSubheader>
-                <ListItem button onClick={() =>{}}>
+                <ListItem button onClick={() => changeForm('basic')}>
                     <ListItemIcon>
                         <EditAttributesIcon />
                     </ListItemIcon>
                     <ListItemText primary="Editar información" />
                 </ListItem>
-                <ListItem button onClick={() => {}}>
+                <ListItem button onClick={() => changeForm('credentials')}>
                     <ListItemIcon>
                         <LockOpenIcon />
                     </ListItemIcon>

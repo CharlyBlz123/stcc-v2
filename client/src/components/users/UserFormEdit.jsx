@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Domain from '../../domain';
 
 import Title from '../title/Title';
-import UserConfirmDeleteModal from "./UserConfirmDeleteModal";
+import UserConfirmActionModal from "./UserConfirmActionModal";
 
 const UserFormEdit = ({
   user,
@@ -156,6 +156,35 @@ const UserFormEdit = ({
     }
   }
 
+  const handleResetPassword = async (user) => {
+    try {
+      let body = { id: user.id, email: user.email, name: user.name, code: user.code };
+      const response = await fetch(`${Domain}users/reset`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", token: localStorage.token },
+        body: JSON.stringify(body)
+      });
+      if (response.status === 200) {
+        messageAlert("Se ha reestablecido la contraseña con éxito")
+        typeAlert("success")
+        showAlert(true)
+        setUser(undefined);
+        tellUserUpdated(true);
+      } else if (response.status === 401) {
+        messageAlert("No tienes los permisos necesarios para solicitar un restablecimiento de contraseña")
+        typeAlert("warning")
+        showAlert(true)
+      } else {
+        messageAlert("Error interno del servidor")
+        typeAlert("error")
+        showAlert(true)
+      }
+
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   useEffect(() => {
     setName(user.userName)
     setCurp(user.curp)
@@ -237,16 +266,24 @@ const UserFormEdit = ({
             >
               Editar
             </Button>
-            <UserConfirmDeleteModal
+            <UserConfirmActionModal
               title="Eliminar usuario"
               message={`¿Seguro que deseas eliminar a ${user.userName} su estado pasará a INACTIVO`}
               action={onDeleteUser}
               actionName="Eliminar"
+              variant="danger"
             />
+            <UserConfirmActionModal
+            title="Activar usuario"
+            user= {{id: user.id, email: user.email, code: user.userCode, name: user.userName}}
+            message={`¿Seguro que desea reestablecer la contraseña para ${user.userCode} con la dirección de email ${user.email}`}
+            action={handleResetPassword}
+            actionName="Restablecer contraseña"
+          />
           </Fragment>
         )}
         {!user.status && (
-          <UserConfirmDeleteModal
+          <UserConfirmActionModal
             title="Activar usuario"
             message={`¿Seguro que deseas activar a ${user.userName} su estado pasará a ACTIVO`}
             action={onActiveUser}

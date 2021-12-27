@@ -100,7 +100,7 @@ const MainUsers = ({ handleDrawerClose, open, changeView }) => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <UsersTable users={users} setUser={ setUser } />
+                <UsersTable users={users} setUser={ setUser } showAlert={ setShowAlert } typeAlert= { setTypeAlert } messageAlert = { setMessageAlert }/>
               </Paper>
             </Grid>
           </Grid>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import AuthContext from '../../AuthContext';
 
 
 import clsx from 'clsx';
@@ -19,7 +20,9 @@ import dashboardStyles from '../../assets/styles/dashboard-styles';
 
 
 
-const Dashboard = ({ setAuth }) => {
+const Dashboard = () => {
+
+  const context = useContext(AuthContext);
 
   const classes = dashboardStyles();
   const handleDrawerOpen = () => {
@@ -56,7 +59,7 @@ const Dashboard = ({ setAuth }) => {
           <Typography component="h1" variant="h6" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          <DashboardMenu setAuth={setAuth} setView={setView} />
+          <DashboardMenu setView={setView} />
         </Toolbar>
       </AppBar>
           

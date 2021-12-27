@@ -7,7 +7,7 @@ exports.new = async (req, res) => {
     try {
         const { userCode, password } = req.body;
         const user = await db.user.findAll({
-            attributes: ['id', 'userName', 'userCode', 'role', 'password'],
+            attributes: ['id', 'userName', 'userCode', 'curp', 'phone', 'email', 'role', 'password'],
             where: {
                 userCode: {
                     [Op.eq]: userCode
@@ -25,7 +25,7 @@ exports.new = async (req, res) => {
         });
 
         const token = jwtGenerator(user[0].dataValues.id, user[0].dataValues.role)
-        res.status(200).json({ token })
+        res.status(200).json({ token, user: user[0].dataValues })
 
 
     } catch (error) {
@@ -37,7 +37,15 @@ exports.new = async (req, res) => {
 
 exports.authorizeAccess = async (req, res) => {
     try {
-        res.json(true);
+        const user = await db.user.findAll({
+            attributes: ['id', 'userName', 'userCode', 'curp', 'phone', 'email', 'role'],
+            where: {
+                id: {
+                    [Op.eq]: req.user.id
+                }
+            }
+        });
+        res.status(200).json({auth: true, user: user[0].dataValues});
     } catch (error) {
         console.log(error.message);
         res.status(500).send("Server error")

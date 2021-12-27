@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
+import AuthContext from "../../AuthContext";
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,9 +7,9 @@ import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 
-const UserMenu = ( { setAuth, setView } ) => {
+const UserMenu = ( {setView } ) => {
     
-
+    const context = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -21,8 +22,7 @@ const UserMenu = ( { setAuth, setView } ) => {
 
       const logOut = (event) => {
         event.preventDefault();
-        localStorage.removeItem("token");
-        setAuth(false);
+        context.onLogout();
       }
 
     return (

@@ -3,7 +3,7 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-this.sendEmailWithCredentials = (name, code, email, password) => {
+this.sendEmailWithCredentials = (name, code, email, password, emailInfo) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -15,15 +15,15 @@ this.sendEmailWithCredentials = (name, code, email, password) => {
     let mailOptions = {
         from: process.env.MAILUSER,
         to: email,
-        subject: "Bienvenido al STCC",
+        subject: emailInfo.subject,
         html: `
             <table border="0" cellpadding="0" cellspacing="0" width="600px" background-color="#2d3436" bgcolor="#2d3436">
             <tr height="200px">  
                 <td bgcolor="" width="600px">
-                    <h1 style="color: #fff; text-align:center">Bienvenido</h1>
+                    <h1 style="color: #fff; text-align:center">${emailInfo.title}</h1>
                     <p  style="color: #fff; text-align:center">
                         <span style="color: #e84393">${name}</span> 
-                        al STCC
+                        ${emailInfo.message}
                     </p>
                 </td>
             </tr>
