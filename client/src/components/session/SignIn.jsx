@@ -73,9 +73,6 @@ const SignIn = () => {
                   <div className="custom-control custom-checkbox custom-control-inline">
                     {" "}
                   </div>
-                  <a href="#" className="ml-auto mb-0 text-sm text-sign-up">
-                    ¿Olvidaste tu contraseña?
-                  </a>
                 </div>
                 <div className="row mb-3 px-3">
                   <button type="submit" className="btn btn-green text-center">

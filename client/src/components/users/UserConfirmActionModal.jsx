@@ -23,7 +23,7 @@ function MyVerticallyCenteredModal(props) {
             <Button
                 variant="danger"
                 onClick={() => {
-                    props.action();
+                    props.action(props.user);
                     props.onHide();
                     }}
                 >
@@ -34,7 +34,7 @@ function MyVerticallyCenteredModal(props) {
     );
   }
   
-  function UserConfirmDeleteModal({ userName, action, title, message, actionName}) {
+  function UserConfirmActionModal({action, title, message, actionName, variant, user}) {
     const [show, setShow] = useState(false);
   
     const handleShow = () => {
@@ -43,14 +43,14 @@ function MyVerticallyCenteredModal(props) {
   
     return (
       <Fragment>
-        <Button variant="danger" onClick={handleShow}>
+        <Button variant={ variant } onClick={handleShow} style={{ marginLeft: '10px' }}>
             {actionName}
         </Button>
   
         <MyVerticallyCenteredModal
+          user={user}
           show={show}
           onHide={handleShow}
-          userName={userName}
           action={action}
           title={title}
           message={message}
@@ -59,4 +59,4 @@ function MyVerticallyCenteredModal(props) {
       </Fragment>
     );
   }
-export default UserConfirmDeleteModal;
+export default UserConfirmActionModal;

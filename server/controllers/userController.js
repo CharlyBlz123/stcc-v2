@@ -39,7 +39,12 @@ exports.create = async (req, res) => {
             )
 
             if (newUser) {
-                mailer.sendEmailWithCredentials(name, code, email, password);
+                const emailInfo = {
+                    subject: "Nueva cuenta en el STCC",
+                    title: "Bienvenido",
+                    message: "al STCC"
+                }
+                mailer.sendEmailWithCredentials(name, code, email, password, emailInfo);
                 res.status(201).json({ message: "User created" })
             } else {
                 res.status(204).json({ message: "User was not create" })
@@ -92,6 +97,7 @@ exports.updateInformation = async (req, res) => {
 
     try {
         const body = await req.body;
+        console.log(req.user)
         if (req.user.role === "admin" || req.user.id === body.id) {
             await db.user.update(body, {
                 where: {
@@ -127,7 +133,9 @@ exports.updateInformation = async (req, res) => {
 }
 exports.updateCredentials = async (req, res) => {
     try {
-        const body = req.body;
+
+        
+        const {id, email, password, oldPassword} = req.body;
 
         const user = await db.user.findAll({
             attributes: ['password'],
@@ -137,21 +145,23 @@ exports.updateCredentials = async (req, res) => {
                 }
             }
         });
-        const validPassword = await checkPassword(body.oldPassword, user[0].dataValues.password);
+
+        console.log(oldPassword)
+        const validPassword = await checkPassword(oldPassword, user[0].dataValues.password);
         if (!validPassword) return res.status(401).json("Password incorrect");
         
         let newData = {};
-        if(body.password !== undefined){
-            const encryptedPassword = await passwordGenerator(body.password);
+        if(password !== undefined){
+            const encryptedPassword = await passwordGenerator(password);
             newData = {password: encryptedPassword}
             console.log(`new Data ${newData}`)
         }
-        if(body.email){
-            newData = {email: body.email, ...newData}
+        if(email){
+            newData = {email: email, ...newData}
         }
         await db.user.update(newData, {
             where: {
-                id: body.id
+                id: id
             }
         });
 
@@ -162,6 +172,30 @@ exports.updateCredentials = async (req, res) => {
         res.status(500).json("Server error")
     }
 
+}
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { id, name, code, email } = req.body;
+        const password = passwordRandom();
+        const encryptedPassword = await passwordGenerator(password);
+        let newData = {password: encryptedPassword};
+        await db.user.update(newData, {
+            where: {
+                id: id
+            }
+        });
+        const emailInfo = {
+            subject: "Contraseña restablecida",
+            title: "Nuevas credenciales",
+            message: "para el STCC"
+        }
+        mailer.sendEmailWithCredentials(name, code, email, password, emailInfo);
+        res.status(200).json("User´s information updated!");
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json("Server error")
+    }
 }
 
 exports.delete = async (req, res) => {

@@ -24,7 +24,7 @@ exports.new = async (req, res) => {
             message: "Password or Email is incorrect"
         });
 
-        const token = jwtGenerator(user[0].dataValues.id)
+        const token = jwtGenerator(user[0].dataValues.id, user[0].dataValues.role)
         res.status(200).json({ token, user: user[0].dataValues })
 
 

@@ -32,45 +32,50 @@ const FormCredentials = ({ messageAlert, typeAlert, showAlert}) => {
                         typeAlert("warning");
                         showAlert(true);
                         setDisableEdit(!disableEdit);
+                        return;
                     } else {
                         body = { password, ...body };
+                        if (Object.keys(body).length !== 0) {
+                          body = { id, ...body };
+                          const response = await fetch(`${PATH}users/credentials`, {
+                            method: "PATCH",
+                            headers: {
+                              "Content-Type": "application/json",
+                              token: localStorage.token,
+                            },
+                            body: JSON.stringify(body),
+                          });
+                          if (response.status === 200) {
+                            messageAlert("Credenciales actualizadas");
+                            typeAlert("success");
+                            showAlert(true);
+                            setDisableEdit(!disableEdit);
+                          } else if (response.status === 401) {
+                            messageAlert(
+                              "Tu contraseña es incorrecta"
+                            );
+                            typeAlert("warning");
+                            showAlert(true);
+                            setDisableEdit(!disableEdit);
+                          } else {
+                            messageAlert("Error interno del servidor, prueba más tarde");
+                            typeAlert("error");
+                            showAlert(true);
+                            setDisableEdit(!disableEdit);
+                          }
+                        } else {
+                          messageAlert("¡Los datos introducidos son iguales a los actuales!");
+                          typeAlert("warning");
+                          showAlert(true);
+                          setDisableEdit(!disableEdit);
+                        }
+                        setPassword("");
+                        setPasswordConfirm("");
+                        setOldPassword("");
                     }
               }
           }
-          if (Object.keys(body).length !== 0) {
-            body = { id, ...body };
-            const response = await fetch(`${PATH}users/credentials`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                token: localStorage.token,
-              },
-              body: JSON.stringify(body),
-            });
-            if (response.status === 200) {
-              messageAlert("Usuario actualizado con éxito");
-              typeAlert("success");
-              showAlert(true);
-              setDisableEdit(!disableEdit);
-            } else if (response.status === 401) {
-              messageAlert(
-                "No tienes los permisos necesarios para actualizar este usuario"
-              );
-              typeAlert("warning");
-              showAlert(true);
-              setDisableEdit(!disableEdit);
-            } else {
-              messageAlert("Error interno del servidor, prueba más tarde");
-              typeAlert("error");
-              showAlert(true);
-              setDisableEdit(!disableEdit);
-            }
-          } else {
-            messageAlert("¡Los datos introducidos son iguales a los actuales!");
-            typeAlert("warning");
-            showAlert(true);
-            setDisableEdit(!disableEdit);
-          }
+          
         } catch (err) {
           console.error(err.message);
           messageAlert("Fallo al procesar petición");

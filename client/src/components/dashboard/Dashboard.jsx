@@ -57,7 +57,7 @@ const Dashboard = () => {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" noWrap className={classes.title}>
-            Dashboard {context.user.id}
+            Dashboard
           </Typography>
           <DashboardMenu setView={setView} />
         </Toolbar>
