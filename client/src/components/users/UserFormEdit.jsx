@@ -33,11 +33,11 @@ const UserFormEdit = ({
       const id = user.id
       let body = {}
 
-      if (userName != user.userName) body = { userName };
-      if (email != user.email) body = { email, ...body };
-      if (phone != user.phone) body = { phone, ...body };
-      if (curp != user.curp) body = { curp, ...body };
-      if (role != user.role) body = { role, ...body };
+      if (userName !== user.userName) body = { userName };
+      if (email !== user.email) body = { email, ...body };
+      if (phone !== user.phone) body = { phone, ...body };
+      if (curp !== user.curp) body = { curp, ...body };
+      if (role !== user.role) body = { role, ...body };
       if (Object.keys(body).length !== 0) {
         body = { id, ...body }
         const response = await fetch(`${Domain}users/`, {
